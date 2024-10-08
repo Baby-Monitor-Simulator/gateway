@@ -1,4 +1,4 @@
-package babymonitor.gateway_api;
+package com.babymonitor.gateway_api;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
