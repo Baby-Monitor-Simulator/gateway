@@ -1,0 +1,22 @@
+FROM openjdk:19-jdk-slim AS build
+
+WORKDIR /gateway-api
+
+COPY mvnw pom.xml /gateway-api/
+COPY .mvn /gateway-api/.mvn
+
+RUN chmod +x /gateway-api/mvnw
+
+RUN ./mvnw dependency:go-offline -B
+
+COPY src /gateway-api/src
+
+RUN ./mvnw clean package -DskipTests && ls -la /gateway-api/target/
+
+FROM openjdk:19-jdk-slim
+
+WORKDIR /gateway-api
+
+# COPY --from=build /gateway-api/target/gateway_api-0.0.1-SNAPSHOT.jar /gateway-api/baby-monitor.jar
+
+CMD ["java", "-jar", "target/gateway_api-0.0.1-SNAPSHOT.jar"]
