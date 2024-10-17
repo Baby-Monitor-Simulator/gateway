@@ -1,22 +1,21 @@
-FROM openjdk:19-jdk-slim AS build
+FROM openjdk:17-jdk-slim
 
+# Set the working directory to /gateway-api
 WORKDIR /gateway-api
 
-COPY mvnw pom.xml /gateway-api/
-COPY .mvn /gateway-api/.mvn
+# Copy Maven Wrapper, pom.xml, and the .mvn folder
+COPY mvnw pom.xml ./
+COPY .mvn .mvn
 
-RUN chmod +x /gateway-api/mvnw
+# Copy source files into /gateway-api/src
+COPY src ./src
 
-RUN ./mvnw dependency:go-offline -B
+# Ensure the mvnw script is executable
+RUN chmod +x mvnw
 
-COPY src /gateway-api/src
+# Copy the entrypoint script into /gateway-api and ensure it’s executable
+COPY entrypoint.sh ./entrypoint.sh
+RUN chmod +x ./entrypoint.sh
 
-RUN ./mvnw clean package -DskipTests && ls -la /gateway-api/target/
-
-FROM openjdk:19-jdk-slim
-
-WORKDIR /gateway-api
-
-# COPY --from=build /gateway-api/target/gateway_api-0.0.1-SNAPSHOT.jar /gateway-api/baby-monitor.jar
-
-CMD ["java", "-jar", "target/gateway_api-0.0.1-SNAPSHOT.jar"]
+# Set the entrypoint script
+ENTRYPOINT ["./entrypoint.sh"]
