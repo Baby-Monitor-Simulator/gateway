@@ -2,7 +2,7 @@ services:
   app:
     build: .
     ports:
-      - "8080:8080"
+      - "8085:8085"
     volumes:
       - .:/gateway-api  # Ensure this matches your Dockerfile's WORKDIR
       - ~/.m2:/root/.m2  # Cache Maven dependencies
