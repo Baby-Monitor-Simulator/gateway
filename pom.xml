@@ -87,8 +87,13 @@
 			<artifactId>keycloak-spring-boot-starter</artifactId>
 			<version>21.0.0</version> <!-- Controleer de versie die je gebruikt -->
 		</dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
-	</dependencies>
+    </dependencies>
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
