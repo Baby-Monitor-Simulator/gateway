@@ -30,6 +30,12 @@ public class JwtAuthenticationFilter implements WebFilter {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
+
+        // Skip the filter for the /identity/login endpoint
+        if (exchange.getRequest().getURI().getPath().startsWith("/identity/login")) {
+            return chain.filter(exchange); // Skip further processing for login endpoint
+        }
+
         String authorizationHeader = exchange.getRequest().getHeaders().getFirst("Authorization");
 
 
