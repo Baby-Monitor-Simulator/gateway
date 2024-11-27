@@ -28,6 +28,7 @@ public class GatewaySecurityConfig {
                 .disable() // CSRF volledig uitschakelen
                 .authorizeExchange()
                 .pathMatchers(HttpMethod.OPTIONS).permitAll() // OPTIONS-verzoeken toestaan
+                .pathMatchers(HttpMethod.POST).permitAll()
                 .pathMatchers("/identity/login").permitAll() // Sta toegang toe tot /identity/login
                 .anyExchange().permitAll() // Toestaan van alle andere requests
                 .and()
@@ -46,9 +47,17 @@ public class GatewaySecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfig = new CorsConfiguration();
         corsConfig.addAllowedOrigin("http://localhost:4173"); // Allow frontend origin
+
+        //add all methods
+        corsConfig.addAllowedMethod("OPTIONS");
+        corsConfig.addAllowedMethod("POST");
+        corsConfig.addAllowedMethod("PUT");
+        corsConfig.addAllowedMethod("DELETE");
+        corsConfig.addAllowedMethod("GET");
+
         corsConfig.addAllowedMethod("*"); // Allow all HTTP methods (GET, POST, etc.)
         corsConfig.addAllowedHeader("*"); // Allow all headers
-        corsConfig.setAllowCredentials(true); // Allow cookies (optional)
+        corsConfig.setAllowCredentials(true); // Allow cookies
 
         // Voeg cache-gerelateerde headers toe
         corsConfig.addExposedHeader("Cache-Control");
