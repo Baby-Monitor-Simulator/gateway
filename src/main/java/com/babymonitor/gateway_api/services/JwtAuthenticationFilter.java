@@ -1,23 +1,21 @@
-package com.babymonitor.gateway_api;
+package com.babymonitor.gateway_api.services;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
-import org.springframework.web.server.WebFilter;
-import org.springframework.web.server.WebFilterChain;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
+import org.springframework.web.server.WebFilter;
+import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Component
 public class JwtAuthenticationFilter implements WebFilter {
@@ -30,39 +28,26 @@ public class JwtAuthenticationFilter implements WebFilter {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
-
-        // Skip the filter for the /identity/login endpoint
-        if (exchange.getRequest().getURI().getPath().startsWith("/identity/login")) {
-            return chain.filter(exchange); // Skip further processing for login endpoint
-        }
-
         String authorizationHeader = exchange.getRequest().getHeaders().getFirst("Authorization");
-
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             String jwtToken = authorizationHeader.substring(7);
 
             try {
-                // Decode the JWT token
                 Jwt decodedJwt = jwtDecoder.decode(jwtToken);
 
-                // Extract roles from 'realm_access' claim
+                // Extract roles from the JWT claims
                 Map<String, Object> realmAccess = decodedJwt.getClaim("realm_access");
-                List<String> roles = (List<String>) realmAccess.get("roles");
+                Collection<GrantedAuthority> authorities = RoleConverter.convertRealmRoles(realmAccess);
 
-                // Convert roles to a list of GrantedAuthority
-                List<GrantedAuthority> authorities = roles.stream()
-                        .map(role -> new SimpleGrantedAuthority("ROLE_" + role.toUpperCase()))
-                        .collect(Collectors.toList());
-
-                // Create JwtAuthenticationToken and set it in the SecurityContext
+                // Create Authentication object and set it in the SecurityContext
                 Authentication authentication = new JwtAuthenticationToken(decodedJwt, authorities);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
             } catch (JwtException e) {
                 // Handle invalid JWT or token validation failure
                 exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-                return exchange.getResponse().setComplete(); // Return without further processing
+                return exchange.getResponse().setComplete();
             }
         }
 

@@ -1,4 +1,4 @@
-package com.babymonitor.gateway_api;
+package com.babymonitor.gateway_api.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,7 +10,7 @@ public class JwtDecoderConfig {
 
     @Bean
     public JwtDecoder jwtDecoder() {
-        // JWK Set URI van Keycloak (kan lokaal draaien)
+        // JWK Set URI van Keycloak
         String jwkSetUri = "http://localhost:8080/realms/Babymonitor/protocol/openid-connect/certs";
         return NimbusJwtDecoder.withJwkSetUri(jwkSetUri).build();
     }
