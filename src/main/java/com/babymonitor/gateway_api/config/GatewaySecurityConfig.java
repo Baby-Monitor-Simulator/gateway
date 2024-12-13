@@ -28,7 +28,7 @@ public class GatewaySecurityConfig {
                 .authorizeExchange()
                 .pathMatchers(HttpMethod.OPTIONS).permitAll() // OPTIONS-verzoeken toestaan
                 .pathMatchers(HttpMethod.POST).permitAll()
-                .pathMatchers("/identity/login").permitAll() // Sta toegang toe tot /identity/login
+                .pathMatchers("/identity/login", "/identity/register").permitAll() // Sta toegang toe tot /identity/login
                 .anyExchange().permitAll() // Toestaan van alle andere requests
                 .and()
                 .cors().configurationSource(corsConfigurationSource())

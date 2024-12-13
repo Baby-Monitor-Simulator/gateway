@@ -11,7 +11,7 @@ public class JwtDecoderConfig {
     @Bean
     public JwtDecoder jwtDecoder() {
         // JWK Set URI van Keycloak
-        String jwkSetUri = "http://localhost:8080/realms/Babymonitor/protocol/openid-connect/certs";
+        String jwkSetUri = "http://keycloak:8080/realms/Babymonitor/protocol/openid-connect/certs";
         return NimbusJwtDecoder.withJwkSetUri(jwkSetUri).build();
     }
 }
