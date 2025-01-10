@@ -1,5 +1,6 @@
 package com.babymonitor.gateway_api.services;
 
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -28,6 +29,10 @@ public class JwtAuthenticationFilter implements WebFilter {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
+        // Pass pre-flight requests
+        if (exchange.getRequest().getMethod() == HttpMethod.OPTIONS) {
+            return chain.filter(exchange);  // Let the request pass without auth check
+        }
 
 
         // Skip the filter for the /identity/login endpoint
