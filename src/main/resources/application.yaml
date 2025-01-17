@@ -1,0 +1,15 @@
+# Keycloak configuratie
+keycloak:
+  auth-server-url: http://keycloak:8080/realms/Babymonitor
+  realm: Babymonitor
+  resource: babymonitor-client-api
+  bearer-only: true
+
+# Spring security oauth2 resource server configuratie
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://keycloak:8080/realms/Babymonitor
+
