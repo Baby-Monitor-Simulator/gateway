@@ -1,0 +1,21 @@
+FROM openjdk:17-jdk-slim
+
+# Set the working directory to /gateway-api
+WORKDIR /gateway
+
+# Copy Maven Wrapper, pom.xml, and the .mvn folder
+COPY mvnw pom.xml ./
+COPY .mvn .mvn
+
+# Copy source files
+COPY src ./src
+
+# Ensure the mvnw script is executable
+RUN chmod +x mvnw
+
+# Copy the entrypoint script
+COPY entrypoint.sh /gateway/entrypoint.sh
+RUN chmod +x /gateway/entrypoint.sh
+
+# Set the entrypoint
+ENTRYPOINT ["./entrypoint.sh"]

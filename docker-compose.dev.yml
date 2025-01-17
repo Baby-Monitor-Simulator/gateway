@@ -1,0 +1,14 @@
+services:
+  gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./src:/gateway-api/src           # Mount the local src directory
+      - ./target:/gateway-api/target       # Mount the local target directory
+      - ./mvnw:/gateway-api/mvnw           # Mount the mvnw script
+      - ./pom.xml:/gateway-api/pom.xml     # Mount the pom.xml if needed
+    ports:
+      - "8080:8080"                     # Map port 8091 to the host
+    environment:
+      SPRING_PROFILES_ACTIVE: dev

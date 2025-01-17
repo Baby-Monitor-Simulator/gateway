@@ -1,11 +1,14 @@
 services:
-  app:
-    build: .
-    ports:
-      - "8080:8080"
+  gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
     volumes:
-      - .:/gateway-api  # Ensure this matches your Dockerfile's WORKDIR
-      - ~/.m2:/root/.m2  # Cache Maven dependencies
-    command: ./mvnw spring-boot:run
+      - ./src:/gateway/src           # Mount the local src directory
+      - ./target:/gateway/target       # Mount the local target directory
+      - ./mvnw:/gateway/mvnw           # Mount the mvnw script
+      - ./pom.xml:/gateway/pom.xml
+    ports:
+      - "8081:8081"
     environment:
-      - SPRING_PROFILES_ACTIVE=dev
+      SPRING_PROFILES_ACTIVE: dev
