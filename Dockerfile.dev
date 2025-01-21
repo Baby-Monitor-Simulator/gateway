@@ -1,8 +1,9 @@
 FROM openjdk:17-jdk-slim
 
+# Set the working directory to /gateway-api
 WORKDIR /gateway
 
-# Copy Maven Wrapper and pom.xml
+# Copy Maven Wrapper, pom.xml, and the .mvn folder
 COPY mvnw pom.xml ./
 COPY .mvn .mvn
 
