@@ -1,3 +1,4 @@
+
 # Keycloak configuratie
 keycloak:
   auth-server-url: http://keycloak:8080/realms/Babymonitor
@@ -11,5 +12,10 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8080/realms/Babymonitor
+          issuer-uri: http://keycloak:8080/realms/Babymonitor
+  cloud:
+    gateway:
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+
 
