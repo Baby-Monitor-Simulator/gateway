@@ -49,7 +49,7 @@ public class GatewaySecurityConfig {
         corsConfig.addAllowedOrigin("http://localhost:4173");
 
         // Allow only necessary HTTP methods
-        corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
 
         // Allow only necessary headers
         corsConfig.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept"));
