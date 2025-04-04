@@ -30,7 +30,12 @@ jobs:
     # Build the Docker image
     - name: Build Docker image
       run: |
-        docker build . --file Dockerfile --tag babymonitors/gateway:latest --tag babymonitors/gateway:${{ env.VERSION }}.${{ github.run_number }}
+        if [[ "${GITHUB_REF}" == "refs/heads/main" ]]; then
+          TAG="latest"
+        else
+          TAG="dev-latest"
+        fi
+        docker build . --file Dockerfile --tag babymonitors/gateway:$TAG --tag babymonitors/gateway:${{ env.VERSION }}.${{ github.run_number }}
 
     # Log in to Docker Hub using secrets
     - name: Log in to Docker Hub
@@ -42,5 +47,10 @@ jobs:
     # Push the Docker image to Docker Hub
     - name: Push Docker image to Docker Hub
       run: |
-        docker push babymonitors/gateway:latest
+        if [[ "${GITHUB_REF}" == "refs/heads/main" ]]; then
+          TAG="latest"
+        else
+          TAG="dev-latest"
+        fi
+        docker push babymonitors/gateway:$TAG
         docker push babymonitors/gateway:${{ env.VERSION }}.${{ github.run_number }}
