@@ -29,7 +29,7 @@ jobs:
       run: |
         COMMIT_SHA=${{ github.sha }}
         SHORT_SHA=${COMMIT_SHA::7}
-
+        echo "SHORT_SHA=$SHORT_SHA" >> $GITHUB_ENV  # Export SHORT_SHA as an environment variable
 
     # Build the Docker image with both the commit SHA and 'latest' tags
     - name: Build Docker image
