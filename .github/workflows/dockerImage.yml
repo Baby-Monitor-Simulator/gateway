@@ -15,9 +15,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    env:
-      VERSION: "1"  
-
     steps:
     # Check out the code
     - name: Checkout Code
@@ -27,10 +24,17 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
 
-    # Build the Docker image
+    # Get the Git commit SHA (shortened to the first 7 characters)
+    - name: Get Commit SHA
+      run: |
+        COMMIT_SHA=${{ github.sha }}
+        SHORT_SHA=${COMMIT_SHA::7}
+
+
+    # Build the Docker image with both the commit SHA and 'latest' tags
     - name: Build Docker image
       run: |
-        docker build . --file Dockerfile --tag babymonitors/gateway:latest --tag babymonitors/gateway:${{ env.VERSION }}.${{ github.run_number }}
+        docker build . --file Dockerfile --tag babymonitors/gateway:$SHORT_SHA --tag babymonitors/gateway:latest
 
     # Log in to Docker Hub using secrets
     - name: Log in to Docker Hub
@@ -39,8 +43,8 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    # Push the Docker image to Docker Hub
+    # Push the Docker image to Docker Hub with both tags
     - name: Push Docker image to Docker Hub
       run: |
+        docker push babymonitors/gateway:$SHORT_SHA
         docker push babymonitors/gateway:latest
-        docker push babymonitors/gateway:${{ env.VERSION }}.${{ github.run_number }}
