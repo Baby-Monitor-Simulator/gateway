@@ -52,5 +52,5 @@ jobs:
     # Push the Docker image to Docker Hub
     - name: Push Docker image to Docker Hub
       run: |
-        docker push babymonitors/gateway:$TAG
         docker push babymonitors/gateway:${{ env.VERSION }}.${{ github.run_number }}
+        docker push babymonitors/gateway:$TAG
