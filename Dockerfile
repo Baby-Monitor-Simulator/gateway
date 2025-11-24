@@ -1,5 +1,7 @@
 # Use an OpenJDK image for Java applications
-FROM openjdk:19-jdk-slim AS build
+# FROM openjdk:19-jdk-slim AS build 
+# depricated
+FROM eclipse-temurin:21-jdk-alpine AS build 
 
 # Set the working directory in the container
 WORKDIR /gateway-api
@@ -30,7 +32,9 @@ RUN ./mvnw clean package -DskipTests
 RUN ls -la /gateway-api/target
 
 # Start a new image to reduce the size of the final image
-FROM openjdk:19-jdk-slim
+# FROM openjdk:19-jdk-slim
+
+FROM eclipse-temurin:21-jdk-alpine
 
 # Set the working directory and copy the jar file from the build stage
 WORKDIR /gateway-api

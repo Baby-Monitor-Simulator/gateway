@@ -9,6 +9,26 @@ services:
       - ./mvnw:/gateway-api/mvnw           # Mount the mvnw script
       - ./pom.xml:/gateway-api/pom.xml     # Mount the pom.xml if needed
     ports:
-      - "8080:8080"                     # Map port 8091 to the host
+      - "8081:8081"                     # Map port 8091 to the host
+    networks:
+      - kong-net
     environment:
       SPRING_PROFILES_ACTIVE: dev
+    
+  websocketBackend:
+    image: node:18-alpine
+    container_name: websocketBackend
+    working_dir: /app
+    command: sh -c "npm install ws && node server.js"
+    ports:
+      - "8080:8080"
+    networks:
+      - kong-net
+    volumes:
+      - ./test_server:/app
+    environment:
+      PORT: 8080
+  
+networks:
+  kong-net:
+    driver: bridge  
