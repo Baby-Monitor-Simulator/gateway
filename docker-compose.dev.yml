@@ -16,10 +16,11 @@ services:
       SPRING_PROFILES_ACTIVE: dev
     
   websocketBackend:
-    image: node:18-alpine
+    build:
+      context: ./test_server
+      dockerfile: Dockerfile
+    image: gateway-websocket-backend
     container_name: websocketBackend
-    working_dir: /app
-    command: sh -c "npm install ws && node server.js"
     ports:
       - "8080:8080"
     networks:

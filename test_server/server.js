@@ -73,7 +73,8 @@ wss.on('connection', (ws) => {
                         if (client !== ws && client.readyState === WebSocket.OPEN) {
                             client.send(JSON.stringify({
                                 type: 'simulation.update',
-                                message: data,
+                                version: data.version,
+                                payload: data.payload,
                                 timestamp: new Date().toISOString()
                             }));
                         }
