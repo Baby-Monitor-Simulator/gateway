@@ -1,8 +1,10 @@
+name: dev-baby-monitor
 services:
   gateway:
     build:
       context: .
       dockerfile: Dockerfile.dev
+      target: build
     volumes:
       - ./src:/gateway-api/src           # Mount the local src directory
       - ./target:/gateway-api/target       # Mount the local target directory

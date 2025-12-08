@@ -41,6 +41,7 @@ public class GatewaySecurityConfig {
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt())
                 .build();
     }
+    
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfig = new CorsConfiguration();
