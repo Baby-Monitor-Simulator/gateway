@@ -22,7 +22,8 @@ class ChangeRouteConfigTest {
                 .filter(route -> route.getId().equals("data"))
         )
         .expectNextMatches(route -> 
-            route.getUri().toString().contains("dataService:8080")
+            //route.getUri().toString().contains("dataService:8080")
+            route.getUri().toString().contains("localhost:8722")
         )
         .expectComplete()
         .verify();

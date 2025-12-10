@@ -1,6 +1,7 @@
 package com.babymonitor.gateway_api.config;
 
 import com.babymonitor.gateway_api.services.JwtAuthenticationFilter;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -21,24 +22,17 @@ import java.util.List;
 @Configuration
 public class GatewaySecurityConfig {
 
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
-
-    public GatewaySecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
-        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
-    }
-
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
         return http
                 .csrf(csrf -> csrf.disable())
                 .authorizeExchange(auth -> auth
                         .pathMatchers(HttpMethod.OPTIONS).permitAll()
-                        .pathMatchers(HttpMethod.POST, "/identity/login", "/identity/register").permitAll()
+                        //.pathMatchers(HttpMethod.POST, "/identity/login", "/identity/register").permitAll()
 
                         .anyExchange().authenticated()
                 )
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt())
                 .build();
     }
     
