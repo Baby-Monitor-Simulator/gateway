@@ -19,11 +19,11 @@ class ChangeRouteConfigTest {
     void testDataRouteExists() {
         StepVerifier.create(
             routeLocator.getRoutes()
-                .filter(route -> route.getId().equals("data"))
+                .filter(route -> route.getId().equals("websocket-data"))
         )
         .expectNextMatches(route -> 
             //route.getUri().toString().contains("dataService:8080")
-            route.getUri().toString().contains("localhost:8722")
+            route.getUri().toString().contains("dataservice:8722")
         )
         .expectComplete()
         .verify();

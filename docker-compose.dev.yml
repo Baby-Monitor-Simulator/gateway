@@ -1,6 +1,8 @@
+version: "3.8"
 name: dev-baby-monitor
 services:
   gateway:
+    container_name: gateway
     build:
       context: .
       dockerfile: Dockerfile.dev
@@ -11,9 +13,9 @@ services:
       - ./mvnw:/gateway-api/mvnw           # Mount the mvnw script
       - ./pom.xml:/gateway-api/pom.xml     # Mount the pom.xml if needed
     ports:
-      - "8081:8081"                     # Map port 8091 to the host
+      - "8081:8081"                     # Map port 8081 to the host
     networks:
-      - kong-net
+      - rabbitmq
     environment:
       SPRING_PROFILES_ACTIVE: dev
     
@@ -26,12 +28,12 @@ services:
     ports:
       - "8080:8080"
     networks:
-      - kong-net
+      - rabbitmq
     volumes:
       - ./test_server:/app
     environment:
       PORT: 8080
   
 networks:
-  kong-net:
+  rabbitmq:
     driver: bridge  
