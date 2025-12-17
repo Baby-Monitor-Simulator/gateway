@@ -1,11 +1,47 @@
-FROM openjdk:17-jdk-slim
+FROM eclipse-temurin:21-jdk-alpine AS build 
+
+# Set the working directory in the container
+WORKDIR /gateway-api
+
+# Copy the Maven wrapper and pom.xml files
+COPY mvnw pom.xml /gateway-api/
+COPY .mvn /gateway-api/.mvn
+
+# Check the contents of /gateway-api after copying
+RUN echo "Contents of /gateway-api:" && ls -la /gateway-api
+
+# Ensure Maven wrapper script is executable within the container
+RUN chmod +x /gateway-api/mvnw
+
+# Verify that mvnw is executable
+RUN echo "Permissions of mvnw:" && ls -la /gateway-api/mvnw
+
+# Install dependencies without running tests to leverage Docker layer caching
+RUN ./mvnw dependency:go-offline -B
+
+# Copy the source code
+COPY src /gateway-api/src
+
+# Package the application with Maven -DskipTests
+RUN ./mvnw clean package 
+
+COPY entrypoint.sh /gateway-api/entrypoint.sh
+RUN chmod +x /gateway-api/entrypoint.sh
+
+# List the contents of the target directory
+RUN ls -la /gateway-api/target
+
+ENTRYPOINT ["./entrypoint.sh"]
+
+
+FROM eclipse-temurin:21-jdk-alpine
 
 # Set the working directory to /gateway-api
-WORKDIR /gateway
+WORKDIR /gateway-api
 
 # Copy Maven Wrapper, pom.xml, and the .mvn folder
-COPY mvnw pom.xml ./
-COPY .mvn .mvn
+COPY mvnw pom.xml ./gateway-api/
+COPY .mvn /gateway-api/.mvn
 
 # Copy source files
 COPY src ./src
@@ -14,8 +50,8 @@ COPY src ./src
 RUN chmod +x mvnw
 
 # Copy the entrypoint script
-COPY entrypoint.sh /gateway/entrypoint.sh
-RUN chmod +x /gateway/entrypoint.sh
+COPY entrypoint.sh /gateway-api/entrypoint.sh
+RUN chmod +x /gateway-api/entrypoint.sh
 
 # Set the entrypoint
 ENTRYPOINT ["./entrypoint.sh"]
