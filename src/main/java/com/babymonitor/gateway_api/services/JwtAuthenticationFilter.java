@@ -34,10 +34,11 @@ public class JwtAuthenticationFilter implements WebFilter {
 
         // Pass pre-flight requests
         if (exchange.getRequest().getMethod() == HttpMethod.OPTIONS) {
-            return chain.filter(exchange);  // Let the request pass without auth check
+            return chain.filter(exchange); // Let the request pass without auth check
         }
 
-        // Skip authentication for WebSocket upgrade requests (/data/* paths are WebSocket)
+        // Skip authentication for WebSocket upgrade requests (/data/* paths are
+        // WebSocket)
         if (path.startsWith("/data/")) {
             return chain.filter(exchange);
         }
@@ -68,9 +69,7 @@ public class JwtAuthenticationFilter implements WebFilter {
                 exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
                 return exchange.getResponse().setComplete();
             }
-        }
-        else
-        {
+        } else {
             exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
             return exchange.getResponse().setComplete();
         }
