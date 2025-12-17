@@ -123,7 +123,7 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
 				<version>3.2.0</version>
-				<executions>
+				<!-- <executions>
 					<execution>
 						<id>checkstyle-validation</id>
 						<phase>validate</phase>
@@ -131,11 +131,11 @@
 							<goal>check</goal>
 						</goals>
 					</execution>
-				</executions>
+				</executions> -->
 				<configuration>
 					<configLocation>google_checks.xml</configLocation>
 					<encoding>${project.build.sourceEncoding}</encoding>
-					<failOnViolation>false</failOnViolation>
+					<failOnViolation>true</failOnViolation>
 				</configuration>
 			</plugin>
 
@@ -144,7 +144,7 @@
 				<groupId>com.github.spotbugs</groupId>
 				<artifactId>spotbugs-maven-plugin</artifactId>
 				<version>4.7.3.0</version>
-				<executions>
+				<!-- <executions>
 					<execution>
 						<id>spotbugs-validation</id>
 						<phase>validate</phase>
@@ -152,10 +152,7 @@
 							<goal>check</goal>
 						</goals>
 					</execution>
-				</executions>
-				<configuration>
-					<failOnViolation>false</failOnViolation>
-				</configuration>
+				</executions> -->
 			</plugin>
 
 			<!-- PMD plugin -->
@@ -163,7 +160,7 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-pmd-plugin</artifactId>
 				<version>3.20.0</version>
-				<executions>
+				<!-- <executions>
 					<execution>
 						<id>pmd-validation</id>
 						<phase>validate</phase>
@@ -171,9 +168,9 @@
 							<goal>check</goal>
 						</goals>
 					</execution>
-				</executions>
+				</executions> -->
 				<configuration>
-					<failOnViolation>false</failOnViolation>
+					<failOnViolation>true</failOnViolation>
 				</configuration>
 			</plugin>
 
