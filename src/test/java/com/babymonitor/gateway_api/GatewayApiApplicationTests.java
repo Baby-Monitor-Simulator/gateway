@@ -8,49 +8,39 @@ import reactor.test.StepVerifier;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-
 @SpringBootTest(classes = GatewayApiApplication.class)
-class ChangeRouteConfigTest {
+class GatewayApiApplicationTests {
 
-    @Autowired
-    private RouteLocator routeLocator;
+	@Autowired
+	private RouteLocator routeLocator;
 
-    @Test
-    void testDataRouteExists() {
-        StepVerifier.create(
-            routeLocator.getRoutes()
-                .filter(route -> route.getId().equals("websocket-data"))
-        )
-        .expectNextMatches(route -> 
-            !route.getUri().toString().isBlank()
-        )
-        .expectComplete()
-        .verify();
-    }
+	@Test
+	void testDataRouteExists() {
+		StepVerifier.create(
+				routeLocator.getRoutes()
+						.filter(route -> route.getId().equals("websocket-data")))
+				.expectNextMatches(route -> !route.getUri().toString().isBlank())
+				.expectComplete()
+				.verify();
+	}
 
-    @Test
-    void testChangeRouteExists() {
-        StepVerifier.create(
-            routeLocator.getRoutes()
-                .filter(route -> route.getId().equals("change"))
-        )
-        .expectNextMatches(route -> 
-            !route.getUri().toString().isBlank()
-        )
-        .expectComplete()
-        .verify();
-    }
+	@Test
+	void testChangeRouteExists() {
+		StepVerifier.create(
+				routeLocator.getRoutes()
+						.filter(route -> route.getId().equals("change")))
+				.expectNextMatches(route -> !route.getUri().toString().isBlank())
+				.expectComplete()
+				.verify();
+	}
 
-    @Test
-    void testScenarioRouteExists() {
-        StepVerifier.create(
-            routeLocator.getRoutes()
-                .filter(route -> route.getId().equals("scenario"))
-        )
-        .expectNextMatches(route -> 
-            !route.getUri().toString().isBlank()
-        )
-        .expectComplete()
-        .verify();
-    }
+	@Test
+	void testScenarioRouteExists() {
+		StepVerifier.create(
+				routeLocator.getRoutes()
+						.filter(route -> route.getId().equals("scenario")))
+				.expectNextMatches(route -> !route.getUri().toString().isBlank())
+				.expectComplete()
+				.verify();
+	}
 }
