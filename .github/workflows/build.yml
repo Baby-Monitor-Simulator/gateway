@@ -32,7 +32,7 @@ jobs:
           cache: maven
 
       - name: Run linting (Checkstyle / SpotBugs / PMD)
-        run: mvn -B validate
+        run: mvn verify -B -Dcheckstyle.consoleOutput=true -Dpmd.consoleOutput=true
 
   # -------------------
   # Unit Tests
