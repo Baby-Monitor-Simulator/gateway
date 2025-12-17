@@ -30,7 +30,6 @@ public class JwtAuthenticationFilter implements WebFilter {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
         String path = exchange.getRequest().getURI().getPath();
-        String method = exchange.getRequest().getMethod().toString();
 
         // Pass pre-flight requests
         if (exchange.getRequest().getMethod() == HttpMethod.OPTIONS) {
