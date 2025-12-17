@@ -29,15 +29,22 @@ public class JwtAuthenticationFilter implements WebFilter {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
+        String path = exchange.getRequest().getURI().getPath();
+        String method = exchange.getRequest().getMethod().toString();
+
         // Pass pre-flight requests
         if (exchange.getRequest().getMethod() == HttpMethod.OPTIONS) {
             return chain.filter(exchange);  // Let the request pass without auth check
         }
 
+        // Skip authentication for WebSocket upgrade requests (/data/* paths are WebSocket)
+        if (path.startsWith("/data/")) {
+            return chain.filter(exchange);
+        }
 
         // Skip the filter for the /identity/login endpoint
-        if (exchange.getRequest().getURI().getPath().startsWith("/identity/login")) {
-            return chain.filter(exchange); // Skip further processing for login endpoint
+        if (path.startsWith("/identity/login")) {
+            return chain.filter(exchange);
         }
 
         String authorizationHeader = exchange.getRequest().getHeaders().getFirst("Authorization");

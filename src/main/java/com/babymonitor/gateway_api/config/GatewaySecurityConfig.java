@@ -1,6 +1,9 @@
 package com.babymonitor.gateway_api.config;
 
 import com.babymonitor.gateway_api.services.JwtAuthenticationFilter;
+
+import org.springframework.security.web.server.context.NoOpServerSecurityContextRepository;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -21,52 +24,114 @@ import java.util.List;
 @Configuration
 public class GatewaySecurityConfig {
 
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
-
-    public GatewaySecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
-        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
-    }
-
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
         return http
-                .csrf(csrf -> csrf.disable())
+                .csrf(ServerHttpSecurity.CsrfSpec::disable)
+                .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
+                .formLogin(ServerHttpSecurity.FormLoginSpec::disable)
+                .logout(ServerHttpSecurity.LogoutSpec::disable)
+                .securityContextRepository(NoOpServerSecurityContextRepository.getInstance())
                 .authorizeExchange(auth -> auth
                         .pathMatchers(HttpMethod.OPTIONS).permitAll()
-                        .pathMatchers(HttpMethod.POST, "/identity/login", "/identity/register").permitAll()
-                        .anyExchange().authenticated()
+                        .pathMatchers("/data/**").permitAll()  // Allow WebSocket connections without auth
+                        .pathMatchers("/identity/login").permitAll()
+                        .anyExchange().permitAll()
                 )
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt())
                 .build();
     }
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfig = new CorsConfiguration();
-
-        // Specify allowed origins
-
-        corsConfig.addAllowedOrigin("http://localhost:4173");
-
-        // Allow only necessary HTTP methods
-        corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
-
-        // Allow only necessary headers
-        corsConfig.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept"));
-
-        // Allow credentials (important for JWT authentication)
+        corsConfig.setAllowedOriginPatterns(List.of("*")); // For development only!
+        corsConfig.setAllowedMethods(List.of("*"));
+        corsConfig.setAllowedHeaders(List.of(
+            "*",
+            "Authorization",
+            "Content-Type",
+            "Accept",
+            "Upgrade",
+            "Connection",
+            "Sec-WebSocket-Key",
+            "Sec-WebSocket-Version",
+            "Sec-WebSocket-Extensions",
+            "Sec-WebSocket-Protocol"
+        ));
         corsConfig.setAllowCredentials(true);
-
-        // Set max age for preflight requests
         corsConfig.setMaxAge(3600L);
 
-        // Expose only necessary headers
-        corsConfig.setExposedHeaders(List.of("Authorization", "Content-Type"));
-
-        // Apply CORS configuration to all endpoints
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfig);
-
         return source;
     }
+
+    // old version
+    // @Bean
+    // public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
+
+
+    //     return http
+    //             .csrf(csrf -> csrf.disable())
+    //             .authorizeExchange(auth -> auth.anyExchange().permitAll())
+    //             .httpBasic(httpBasic -> httpBasic.disable())
+    //             .formLogin(formLogin -> formLogin.disable())
+    //             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+    //             .build();
+
+    //     // return http
+    //     //         .csrf(csrf -> csrf.disable())
+    //     //         .authorizeExchange(auth -> auth
+    //     //                 .pathMatchers(HttpMethod.OPTIONS).permitAll()
+    //     //                 .pathMatchers(HttpMethod.POST, "/identity/**").permitAll()
+    //     //                 .anyExchange().authenticated()
+    //     //         )
+    //     //         .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+    //     //         .build();
+    // }
+    
+    // @Bean
+    // public CorsConfigurationSource corsConfigurationSource() {
+    //     CorsConfiguration corsConfig = new CorsConfiguration();
+
+    //     // Specify allowed origins
+    //     corsConfig.addAllowedOrigin("http://localhost:4173");
+    //     corsConfig.addAllowedOrigin("ws://localhost:8722");
+
+    //     // Allow only necessary HTTP methods
+    //     corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+
+    //     // Allow only necessary headers
+    //     corsConfig.setAllowedHeaders(List.of(
+    //         "Authorization", 
+    //         "Content-Type", 
+    //         "Accept", 
+    //         "Upgrade",           // Important for WebSocket
+    //         "Connection",        // Important for WebSocket
+    //         "Sec-WebSocket-Key",
+    //         "Sec-WebSocket-Version",
+    //         "Sec-WebSocket-Extensions",
+    //         "Sec-WebSocket-Protocol"
+    //     ));
+
+    //     // Allow credentials (important for JWT authentication)
+    //     corsConfig.setAllowCredentials(true);
+
+    //     // Set max age for preflight requests
+    //     corsConfig.setMaxAge(3600L);
+
+    //     corsConfig.setExposedHeaders(List.of(
+    //         "Authorization", 
+    //         "Content-Type", 
+    //         "Connection", 
+    //         "Upgrade"
+    //     ));
+
+    //     // Apply CORS configuration to all endpoints
+    //     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    //     source.registerCorsConfiguration("/**", corsConfig);
+
+    //     return source;
+    // }
 }
