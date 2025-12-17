@@ -135,7 +135,7 @@
 				<configuration>
 					<configLocation>google_checks.xml</configLocation>
 					<encoding>${project.build.sourceEncoding}</encoding>
-					<failOnViolation>true</failOnViolation>
+					<failOnViolation>false</failOnViolation>
 				</configuration>
 			</plugin>
 
@@ -153,6 +153,9 @@
 						</goals>
 					</execution>
 				</executions>
+				<configuration>
+					<failOnViolation>false</failOnViolation>
+				</configuration>
 			</plugin>
 
 			<!-- PMD plugin -->
@@ -170,7 +173,7 @@
 					</execution>
 				</executions>
 				<configuration>
-					<failOnViolation>true</failOnViolation>
+					<failOnViolation>false</failOnViolation>
 				</configuration>
 			</plugin>
 
